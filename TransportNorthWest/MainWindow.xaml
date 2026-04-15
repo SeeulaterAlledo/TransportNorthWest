@@ -1,0 +1,221 @@
+﻿<Window x:Class="TransportNorthWest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Транспортная задача — Северо-западный угол"
+        Height="1000" Width="1800"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F7FB">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#3B82F6"/>
+        <SolidColorBrush x:Key="PrimaryDarkBrush" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#DC2626"/>
+        <SolidColorBrush x:Key="CardBrush" Color="White"/>
+        <SolidColorBrush x:Key="BorderBrushCustom" Color="#D6DCE8"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#1F2937"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#6B7280"/>
+        <SolidColorBrush x:Key="SoftBrush" Color="#EFF6FF"/>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushCustom}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,6,0"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="MinWidth" Value="70"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1.2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="145"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="AutoGenerateColumns" Value="True"/>
+            <Setter Property="HeadersVisibility" Value="All"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="2.3*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Background="{StaticResource PrimaryBrush}">
+            <StackPanel>
+                <TextBlock Text="Транспортная задача"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           Foreground="White"/>
+                <TextBlock Text="Метод северо-западного угла"
+                           Margin="0,4,0,0"
+                           FontSize="15"
+                           Foreground="#DBEAFE"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <WrapPanel>
+                <TextBlock Text="Поставщики:" Style="{StaticResource LabelStyle}"/>
+                <TextBox x:Name="SuppliersCountTextBox" Width="70"/>
+
+                <TextBlock Text="Потребители:" Style="{StaticResource LabelStyle}" Margin="16,0,6,0"/>
+                <TextBox x:Name="ConsumersCountTextBox" Width="70"/>
+
+                <Button Style="{StaticResource PrimaryButtonStyle}" Content="Создать таблицы" Click="CreateTables_Click"/>
+                <Button Style="{StaticResource PrimaryButtonStyle}" Content="Заполнить пример" Click="FillExample_Click"/>
+                <Button Style="{StaticResource PrimaryButtonStyle}" Content="Решить" Click="Solve_Click"/>
+                <Button Style="{StaticResource PrimaryButtonStyle}" Content="Экспорт в CSV" Click="ExportCsv_Click"/>
+                <Button Style="{StaticResource DangerButtonStyle}" Content="Очистить" Click="Clear_Click"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- Блок ввода -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.4*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <TextBlock Text="Матрица стоимостей" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Введите стоимость перевозки из Ai в Bj"
+                               Margin="0,0,0,10"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               DockPanel.Dock="Top"/>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid x:Name="CostsGrid" Margin="4"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <TextBlock Text="Запасы" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Объем у поставщиков"
+                               Margin="0,0,0,10"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               DockPanel.Dock="Top"/>
+                    <ScrollViewer>
+                        <StackPanel x:Name="SupplyPanel"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <TextBlock Text="Потребности" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Объем у потребителей"
+                               Margin="0,0,0,10"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               DockPanel.Dock="Top"/>
+                    <ScrollViewer>
+                        <StackPanel x:Name="DemandPanel"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- Результат -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <TextBlock Text="План перевозок" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Top"/>
+                    <DataGrid x:Name="ResultDataGrid"/>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <TextBlock Text="Информация о решении" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Top"/>
+
+                    <Border Background="{StaticResource SoftBrush}"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="0,0,0,10"
+                            DockPanel.Dock="Top">
+                        <TextBlock x:Name="TotalCostTextBlock"
+                                   Text="Общая стоимость: "
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryDarkBrush}"/>
+                    </Border>
+
+                    <TextBox x:Name="LogTextBox"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             IsReadOnly="True"
+                             Height="250"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- Подсказка -->
+        <Border Grid.Row="4" Style="{StaticResource CardStyle}" Background="#F8FAFC">
+            <TextBlock Foreground="{StaticResource MutedTextBrush}"
+                       FontSize="13"
+                       Text="Совет: сначала укажите количество поставщиков и потребителей, затем создайте таблицы и заполните данные."/>
+        </Border>
+    </Grid>
+</Window>
